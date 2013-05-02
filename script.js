@@ -1,4 +1,57 @@
+(function () {
 'use strict'
+
+// Make these functions available in older browsers.
+Array.prototype.map = Array.prototype.map ||
+    function (func) {
+        for (var i = 0; i < this.length; i ++) {
+            this[i] = func(this[i], i)
+        }
+        return this
+    }
+
+Array.prototype.forEach = Array.prototype.forEach ||
+    function (func) {
+        for (var i = 0; i < this.length; i ++) {
+            func(this[i], i)
+        }
+    }
+
+// function to change the active "screen".
+function changeScreen(screenName) {
+    var forEachFunc = Array.prototype.forEach,
+        elements = document.getElementsByTagName('BODY')[0].children
+
+    forEachFunc.call(elements, function (elm) {
+        // OldIE doesn't have getElementsByClassName
+        var classes = elm.getAttribute('class')
+        if (classes && classes.indexOf('screen') !== -1) {
+            if (elm.id !== screenName) {
+                elm.style.display = 'none'
+            }
+        }
+    })
+    
+    document.getElementById(screenName).style.display = 'block'
+}
+
+// Check readyState changes, call initialization when document ready.
+function onReadyStateChange () {
+    if (document.readyState === 'complete') {
+        firstScreen()
+    }
+}
+
+document.onreadystatechange = onReadyStateChange
+
+function firstScreen() {
+    changeScreen('start')
+    var startGame = document.getElementById('start-game-button')
+
+    startGame.onclick = function () {
+        fetchBadges() // game.js
+    }
+}
 
 window.revealedTiles = []
 window.hiddenTiles = 18
@@ -19,6 +72,8 @@ function randomResult() {
     return Math.random() > 0.5 ? -1 : 1
 }
 
+// JSONP function. Exposed to window object
+window.onBadgesReceived =
 function onBadgesReceived(data) {
     var tableElement = document.getElementById('game-table'),
         randomNineURLs,
@@ -126,17 +181,16 @@ function onClickOnBadge() {
             checkEndGame()
         } else {
             // Unreveal later
-            setTimeout(unReveal, window.timeToLookBeforeHiding)
+            setTimeout(function () {
+                window.revealedTiles.map(function (image) {
+                    image.src = backOfBadge
+                })
+                window.revealedTiles = []
+            }, window.timeToLookBeforeHiding)
         }
     }
 }
 
-function unReveal() {
-    window.revealedTiles.map(function (image) {
-        image.src = backOfBadge
-    })
-    window.revealedTiles = []
-}
 
 function checkEndGame() {
     if (window.hiddenTiles === 0) {
@@ -145,3 +199,22 @@ function checkEndGame() {
     }
 }
 
+
+window.twitterBaseURL = 'https://twitter.com/intent/tweet/?text='
+window.baseTweet = 'Memory JavaScript FTW em: '
+
+function onLoseGame() {
+    changeScreen('lose-game')
+}
+
+function onEndGame(time) {
+    changeScreen('end-game')
+
+    var timeSpanSpan = document.getElementById('game-finish-time'),
+        shareLink = document.getElementById('twitter-share')
+    timeSpanSpan.innerHTML = time.toString()
+    shareLink.href = twitterBaseURL + escape(baseTweet + time)
+}
+
+
+}())
