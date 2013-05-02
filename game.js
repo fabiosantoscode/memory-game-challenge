@@ -1,6 +1,7 @@
 'use strict'
 
 window.revealedTiles = []
+window.hiddenTiles = 18
 window.backOfBadge = 'https://i2.wp.com/codebits.eu/logos/defaultavatar.jpg'
 window.timeToLookBeforeHiding = 1000
 
@@ -69,7 +70,8 @@ function onBadgesReceived(data) {
             return item.outerHTML
         })
         .join('')
-    
+
+    console.log(tableInnerHTML)
     tableElement.innerHTML = tableInnerHTML
     
     prepareGame()
@@ -99,12 +101,7 @@ function isRevealed(image) {
 
 function onClickOnBadge() {
     // Do not reveal already revealed badges. For that we try to find this img in the revealedTiles thing.
-    if (isRevealed(this)) {
-        return
-    }
-    
-    // Do not reveal after revealing 2 images. There's a short interval.
-    if (window.revealedTiles.length === 2) {
+    if (this.getAttribute('data-real-source') === this.src) {
         return
     }
     
@@ -118,6 +115,8 @@ function onClickOnBadge() {
         if (revealedTiles[0].src === revealedTiles[1].src) {
             // Unreveal nothing
             window.revealedTiles = []
+            window.hiddenTiles -= 2
+            checkEndGame()
         } else {
             // Unreveal later
             setTimeout(unReveal, window.timeToLookBeforeHiding)
@@ -131,3 +130,10 @@ function unReveal() {
     })
     window.revealedTiles = []
 }
+
+function checkEndGame() {
+    if (window.hiddenTiles === 0) {
+        onEndGame() // end.js
+    }
+}
+
