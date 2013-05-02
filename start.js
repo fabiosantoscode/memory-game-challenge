@@ -9,6 +9,15 @@ function onReadyStateChange () {
 document.onreadystatechange = onReadyStateChange
 
 function onReady() {
-    fetchBadges() // game.js
+    firstScreen()
+}
+
+function firstScreen() {
+    changeScreen('start')
+    var startGame = document.getElementById('start-game-button')
+
+    startGame.onclick = function () {
+        fetchBadges() // game.js
+    }
 }
 

@@ -2,9 +2,10 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Memory game</title>
+    <title>Memory match</title>
     <link rel="stylesheet" href="style.css"/>
     <script type="text/javascript" src="compat.js"></script>
+    <script type="text/javascript" src="screens.js"></script>
     <script type="text/javascript" src="start.js"></script>
     <script type="text/javascript" src="game.js"></script>
     <script type="text/javascript" src="end.js"></script>
@@ -12,14 +13,25 @@
 <body>
     <h1>Memory game</h1>
     <div id="start" class="screen">
+        <p>This is a game of memory. When you are done you may share your success to the world. More on that later. Click below to play.</p>
+        <a href="#" id="start-game-button">Iniciar Jogo</a>
     </div>
     <div id="game" class="screen">
         <div id="game-table">
             &nbsp;
         </div>
+        <p><strong id="game-counter"></strong></p>
+        <p class="start-again"><a href="" onclick="javascript:window.location.reload()">Start again</a></p>
     </div>
     <div id="end-game" class="screen">
-        <p></p>
+        <p>Yay! You completed the game in <span id="game-finish-time">&nbsp;</span> seconds!</p>
+
+        <p>
+            <a id="twitter-share" href="#">
+                Share your amazing score on twitter!
+            </a>
+        </p>
+        <p class="start-again"><a href="" onclick="javascript:window.location.reload()">Start again</a></p>
     </div>
 </body>
 </html>

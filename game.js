@@ -4,6 +4,7 @@ window.revealedTiles = []
 window.hiddenTiles = 18
 window.backOfBadge = 'https://i2.wp.com/codebits.eu/logos/defaultavatar.jpg'
 window.timeToLookBeforeHiding = 1000
+window.gameCounterTime = 0
 
 // JSONP to https://services.sapo.pt/Codebits/listbadges
 function fetchBadges() {
@@ -11,6 +12,7 @@ function fetchBadges() {
     script.src = "https://services.sapo.pt/Codebits/listbadges?callback=onBadgesReceived"
     script.type="text/javascript"
     document.getElementsByTagName('BODY')[0].appendChild(script)
+    changeScreen('game')
 }
 
 function onBadgesReceived(data) {
@@ -76,7 +78,12 @@ function onBadgesReceived(data) {
 }
 
 function prepareGame() {
-    var table = document.getElementById('game-table')
+    var table = document.getElementById('game-table'),
+        counter = document.getElementById('game-counter')
+    window.gameCounterInterval = setInterval(function () {
+        window.gameCounterTime += 1
+        counter.innerHTML = window.gameCounterTime.toString()
+    }, 1000)
     table.onclick = onClickOnTable
 }
 
@@ -129,7 +136,8 @@ function unReveal() {
 
 function checkEndGame() {
     if (window.hiddenTiles === 0) {
-        onEndGame() // end.js
+        clearInterval(window.gameCounterInterval)
+        onEndGame(window.gameCounterTime) // end.js
     }
 }
 
