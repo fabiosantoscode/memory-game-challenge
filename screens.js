@@ -1,17 +1,18 @@
 'use strict'
 
 function changeScreen(screenName) {
-    var sliceFunc = Array.prototype.slice,
-        elements = document.getElementsByClassName('screen')
-
-    // Turning HTMLCollection into a regular array makes it faster and enables map()
-    elements = sliceFunc.call(elements, 0)
-
-    elements.map(function (item) {
-        if (item.id !== screenName) {
-            item.style.display = 'none'
+    var forEachFunc = Array.prototype.forEach,
+        elements = document.getElementsByTagName('BODY')[0].children
+    
+    forEachFunc.call(elements, function (elm) {
+        var classes = elm.getAttribute('class')
+        if (classes && classes.indexOf('screen') !== -1) {
+            if (elm.id !== screenName) {
+                elm.style.display = 'none'
+            }
         }
     })
+    
     document.getElementById(screenName).style.display = 'block'
 }
 

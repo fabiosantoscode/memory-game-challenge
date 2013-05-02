@@ -1,6 +1,6 @@
 'use strict'
 
-// Make this function available in older browsers.
+// Make these functions available in older browsers.
 Array.prototype.map = Array.prototype.map ||
     function (func) {
         for (var i = 0; i < this.length; i ++) {
@@ -8,3 +8,11 @@ Array.prototype.map = Array.prototype.map ||
         }
         return this
     }
+
+Array.prototype.forEach = Array.prototype.forEach ||
+    function (func) {
+        for (var i = 0; i < this.length; i ++) {
+            func(this[i], i)
+        }
+    }
+

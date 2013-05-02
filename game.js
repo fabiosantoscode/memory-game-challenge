@@ -15,6 +15,10 @@ function fetchBadges() {
     changeScreen('game')
 }
 
+function randomResult() {
+    return Math.random() > 0.5 ? -1 : 1
+}
+
 function onBadgesReceived(data) {
     var tableElement = document.getElementById('game-table'),
         randomNineURLs,
@@ -25,15 +29,15 @@ function onBadgesReceived(data) {
         tableInnerHTML
 
     randomNineURLs = data
-        .sort(Math.random) // This will shuffle everything
-        .slice(0, 9) // Then gets the first nine items
+        .sort(randomResult) // This will shuffle everything
+        .slice(0, 9) // Then this gets the first nine items
         .map(function (item) {
             return item.img
         })
     
     shuffledPairs = randomNineURLs
         .concat(randomNineURLs) // This doubles everything
-        .sort(Math.random)
+        .sort(randomResult)
     
     asElements = shuffledPairs
         .map(function (imageUrl) {
