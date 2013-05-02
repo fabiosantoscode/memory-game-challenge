@@ -4,18 +4,6 @@ window.revealedTiles = []
 window.backOfBadge = 'https://i2.wp.com/codebits.eu/logos/defaultavatar.jpg'
 window.timeToLookBeforeHiding = 1000
 
-function onReadyStateChange () {
-    if (document.readyState === 'complete') {
-        onReady()
-    }
-}
-
-document.onreadystatechange = onReadyStateChange
-
-function onReady() {
-    fetchBadges()
-}
-
 // JSONP to https://services.sapo.pt/Codebits/listbadges
 function fetchBadges() {
     var script = document.createElement('SCRIPT')
