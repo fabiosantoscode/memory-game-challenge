@@ -17,7 +17,7 @@ function onBadgesReceived(data) {
     var tableElement = document.getElementById('game-table'),
         randomNineURLs,
         shuffledPairs,
-        asHTML,
+        asElements,
         rowArrays,
         rowElements,
         tableInnerHTML
@@ -33,7 +33,7 @@ function onBadgesReceived(data) {
         .concat(randomNineURLs) // This doubles everything
         .sort(Math.random)
     
-    asHTML = shuffledPairs
+    asElements = shuffledPairs
         .map(function (imageUrl) {
             var img = document.createElement('IMG')
             img.src = backOfBadge
@@ -42,23 +42,21 @@ function onBadgesReceived(data) {
             img.setAttribute('data-real-source', imageUrl)
             img.setAttribute('class', 'badge hidden')
             
-            var td = document.createElement('TD')
-            td.appendChild(img)
-            
-            return td
+            return img
         })
     
     rowArrays = [
-        asHTML.slice(0, 6),
-        asHTML.slice(6, 12),
-        asHTML.slice(12, 18)
+        asElements.slice(0, 6),
+        asElements.slice(6, 12),
+        asElements.slice(12, 18)
     ]
     
     console.log(rowArrays)
     
     rowElements = rowArrays
         .map(function (row) {
-            var tr = document.createElement('TR')
+            var tr = document.createElement('DIV') // This used to be a TR, but http://stackoverflow.com/a/4943362/1011311
+            tr.setAttribute('class', 'game-table-row')
             row.map(function (td) {
                 tr.appendChild(td)
             })
@@ -83,25 +81,23 @@ function prepareGame() {
 }
 
 function onClickOnTable(e) {
+    // Get event on IE
+    e = e || window.event
+    // Get event target on several browsers
+    var target = e.originalTarget || e.srcElement || e.target
     // call the event function with the <img> element as `this`
-    onClickOnBadge.call(e.originalTarget)
+    onClickOnBadge.call(target)
     return false
-}
-
-function isRevealed(image) {
-    var found = false
-    for (var i = 0; i < window.revealedTiles.length; i++) {
-        if (window.revealedTiles[i] === image) {
-            found=true;
-            break;
-        }
-    }
-    return found
 }
 
 function onClickOnBadge() {
     // Do not reveal already revealed badges. For that we try to find this img in the revealedTiles thing.
     if (this.getAttribute('data-real-source') === this.src) {
+        return
+    }
+
+    // Let the user see the 2 tiles now.
+    if (window.revealedTiles.length === 2) {
         return
     }
     

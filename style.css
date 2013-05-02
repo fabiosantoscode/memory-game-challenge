@@ -19,5 +19,6 @@ h1 {
 .badge {
   height: 95px;
   width: 95px;
+  margin-right: 5px;
   cursor: pointer;
 }

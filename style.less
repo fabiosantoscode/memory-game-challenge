@@ -1,3 +1,6 @@
+@badge-width: 95px;
+@game-width: 600px;
+
 html{
 	background-color: #fed;
 	height: 100%;
@@ -23,6 +26,7 @@ h1 {
 .badge {
 	height: 95px;
 	width: 95px;
-	
+	margin-right: floor((@game-width / 6) - @badge-width);
 	cursor: pointer;
 }
+
